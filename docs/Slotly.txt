@@ -1,0 +1,66 @@
+MPV Slotly
+
+usuários do Slotly: Clientes e barbeiros.
+
+Oque cada um consegue fazer?
+-Clientes: Escolher um horário que o barbeiro esteja disponível, o que ele vai querer fazer(só corte de cabelo ou barba, cabelo e sombrancelha), forma de pagamento.
+-Barbeiro: Reservar e confirmar o horário para o cliente.
+
+Qual tela cada um enxerga?
+-Cliente: Tela de horário disponíveis e tipos de corte de cabelo.
+-Barbeiro: Agenda com horário dos clientes da semana, tipo de serviço de cada cliente.
+
+CAMINHO FELIZ
+Cliente: entra no site -> vê horários disponíveis -> reserva o horário com seu login -> Se o barbeiro tiver o horario livre, atendimento confirmado automaticamente -> cliente recebe confirmação.
+Barbeiro: Personaliza sua agenda com forme os dias que ele trabalha -> ve horários agendados -> realiza o serviço do cliente -> confirma que o serviço foi feito na sua agenda.
+
+IDEIAS
+Barbeiro:
+-lembretes, Definir os dias de trabalho e dias de folga, ver agenda da semana, Aprova o atendimento, define o status do atendimento(concluído, pendente, confirmado, cancelado), bloquear marcar horários nos dias de folga, ver faturamento do mês.
+
+Cliente: 
+-Reservar horário, escolher serviço, escolher forma de pagamento, criar conta e fazer login, ver horários disponíveis, cancelar ou reagendar seu atendimento, avaliar o atendimento.
+
+
+REGRAS DO SISTEMA
+-Impedir dois agendamentos no mesmo horário, proibir agendar sem ter login, Lista de espera para horários lotados, prazo mínimo para cancelar, Serviços com durações diferentes (30 min, 1h, 2h) com duração variável. Criado para somente UM barbeiro com seu salão.
+
+COMUNICAÇÃO
+-Whatsapp, lembrete antes do horário, notificação de cancelamento.
+
+Extras:
+Pagamento online ou físico, Pacotes mensais
+
+FILTRO Pós-MVP
+-Pagamento online: sem ele o cliente agenda e paga no balcão, não é MVP.
+-Escolher forma de pagamento: cliente pode escolher no balcão, então não é MVP.
+-Avaliar atendimento: Cliente consegue fazer tudo sem precisar avaliar obrigatoriamente, então não é MVP.
+-faturamento do mês: O barbeiro pode seguir com os agendamentos normais sem o faturamento mensal, não é MVP.
+-pacotes mensais: O cliente pode agendar um horário mesmo sem assinar um pacote ou plano mensal, Não é MVP.
+-Lista de espera: Com ela cria uma fila e exige decidir o que acontece quando alguém cancela
+
+Dentro do MVP
+Confirmação do cliente: aparece na própria tela caso o horário que ele escolheu esteja livre e o login tiver sido feito.
+prazo mínimo para cancelar: O cliente deve ter um prazo minímo para cancelar caso aconteça algum imprevisto ele possa cancelar.
+durações diferentes: Sem especificar o serviço e a duração a pode atrasar o atendimento de outros clientes.
+Impedir dois agendamentos no mesmo horário: Se tiver dois agendamentos no mesmo horário vai dar conflito na hora do atendimento.
+proibir agendar sem login: Sem um login o barbeiro não cosegue saber quem é o cliente que marcou.
+notificação de cancelamento/ Lembretes para o barbeiro: sem ela o barbeiro não sabe que o cliente cancelou e fica esperando sem saber.
+cancelar/reagendar: Essa opção deve ser obrigatória caso o cliente precise cancelar.
+bloquear dias de folga: Sem isso os clientes podem acabar escolhendo um horário no dia que o barbeiro não trabalha.
+
+
+História de usuário
+1-Como cliente quero agendar meu horário e não precisar ficar esperando.
+2-Como Barbeiro quero ver minha agenda da semana
+3-Como Barbeiro quero receber lembretes sobre meus clientes confirmados.
+4-Como cliente quero escolher o tipo de serviço que vou fazer para não ter que ficar explicando na hora.
+5-Como cliente quero ter a opção de cancelar e criar um novo agendamento do zero.
+6-Como Cliente quero receber confirmação de que meu atendimento foi confirmado.
+7-Como barbeiro quero personalizar minha agenda conforme os dias que trabalho.
+
+
+
+
+
+
