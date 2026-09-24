@@ -1,6 +1,6 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
+from flask import Flask, render_template
 from flask.cli import load_dotenv
 
 load_dotenv()
@@ -8,9 +8,6 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 
 db = SQLAlchemy(app)
-@app.route("/")
-def inicio():
-    return "Olá, Slotly"
 
 class Servico(db.Model):
     __tablename__ = "servico"
@@ -83,3 +80,12 @@ class Bloqueio(db.Model):
     __table_args__ = (
         db.CheckConstraint("data_hora_fim > data_hora_inicio", name="ck_bloqueio_data_hora"),
     )
+
+@app.route("/")
+def inicio():
+    return "Olá, Slotly"
+
+@app.route("/servicos")
+def listar_servicos():
+    servicos = Servico.query.all()
+    return render_template("servicos.html", servicos=servicos)
