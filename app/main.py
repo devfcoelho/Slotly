@@ -1,7 +1,9 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template
-from flask.cli import load_dotenv
+from dotenv import load_dotenv
+from flask import Flask, render_template, request, redirect
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -89,3 +91,15 @@ def inicio():
 def listar_servicos():
     servicos = Servico.query.all()
     return render_template("servicos.html", servicos=servicos)
+
+@app.route("/servicos/novo", methods = ["GET", "POST"])
+def novo_servico():
+    if request.method == "POST":
+        nome = request.form["nome"]
+        duracao_min = request.form["duracao_min"]
+        preco = request.form ["preco"]
+        novo = Servico(nome=nome,duracao_min=duracao_min,preco=preco)
+        db.session.add(novo)
+        db.session.commit()
+        return redirect("/servicos")
+    return render_template("novo_servico.html")
