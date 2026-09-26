@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Serviços - Slotly</title>
@@ -8,7 +8,7 @@
     <h1>Serviços</h1>
     <ul>
         {% for servico in servicos %}
-            <li>{{ servico.nome }} - {{ servico.duracao_min }} min - R$ {{ servico.preco }}</li>
+            <li>{{ servico.nome }} - {{ servico.duracao_min }} min - R$ {{ servico.preco }}<a href="/servicos/{{servico.id}}/editar">Editar</a></li>
         {% endfor %}
     </ul>
 </body>

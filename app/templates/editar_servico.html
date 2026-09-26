@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Serviço</title>
+</head>
+<body>
+    <form method="post">
+    <label>Nome do serviço:</label>
+    <input type="text" name="nome" value="{{servico.nome}}">
+
+    <label>Duração (min):</label>
+    <input type="number" name="duracao_min" value="{{servico.duracao_min}}">
+
+    <label>Preço:</label>
+    <input type="number" name="preco" value="{{servico.preco}}">
+
+    <button type="submit">Salvar</button>
+</form>
+</body>
+</html>

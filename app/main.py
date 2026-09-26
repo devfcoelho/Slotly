@@ -103,3 +103,14 @@ def novo_servico():
         db.session.commit()
         return redirect("/servicos")
     return render_template("novo_servico.html")
+
+@app.route("/servicos/<int:id>/editar", methods=["GET", "POST"])
+def editar_servico(id):
+    servico = Servico.query.get_or_404(id)
+    if request.method == "POST":
+        servico.nome = request.form["nome"]
+        servico.duracao_min = request.form["duracao_min"]
+        servico.preco = request.form["preco"]
+        db.session.commit()
+        return redirect("/servicos")
+    return render_template("editar_servico.html", servico=servico)
