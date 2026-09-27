@@ -114,3 +114,10 @@ def editar_servico(id):
         db.session.commit()
         return redirect("/servicos")
     return render_template("editar_servico.html", servico=servico)
+
+@app.route("/servicos/<int:id>/desativar",methods=["POST"])
+def desativar_servico(id):
+    servico = Servico.query.get_or_404(id)
+    servico.ativo = not servico.ativo
+    db.session.commit()
+    return redirect("/servicos")

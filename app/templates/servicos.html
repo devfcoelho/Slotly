@@ -8,7 +8,14 @@
     <h1>Serviços</h1>
     <ul>
         {% for servico in servicos %}
-            <li>{{ servico.nome }} - {{ servico.duracao_min }} min - R$ {{ servico.preco }}<a href="/servicos/{{servico.id}}/editar">Editar</a></li>
+            <li>{{ servico.nome }} - {{ servico.duracao_min }} min - R$ {{ servico.preco }}{% if servico.ativo %}
+    (Ativo)
+{% else %}
+    (Inativo)
+{% endif %}
+                <a href="/servicos/{{servico.id}}/editar">Editar</a><form method="post" action="/servicos/{{ servico.id }}/desativar" style="display: inline;">
+    <button type="submit">Ativar/Desativar</button>
+</form></li>
         {% endfor %}
     </ul>
 </body>
