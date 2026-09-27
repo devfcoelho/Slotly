@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 app = Flask(__name__)
@@ -121,3 +121,18 @@ def desativar_servico(id):
     servico.ativo = not servico.ativo
     db.session.commit()
     return redirect("/servicos")
+
+@app.route("/cadastro", methods=["GET","POST"])
+def cadastro():
+    if request.method =="POST":
+        nome = request.form["nome"]
+        email = request.form["email"]
+        senha = request.form["senha"]
+        senha_hash = generate_password_hash(senha)
+        novo = Usuario(nome=nome,email=email,senha_hash=senha_hash)
+        db.session.add(novo)
+        db.session.commit()
+        return redirect("/login")
+    return render_template("cadastro.html")
+    
+        
