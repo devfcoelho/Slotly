@@ -2,12 +2,13 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 db = SQLAlchemy(app)
 
@@ -134,5 +135,17 @@ def cadastro():
         db.session.commit()
         return redirect("/login")
     return render_template("cadastro.html")
-    
+
+@app.route("/login",methods=["GET","POST"])
+def login():
+    if request.method =="POST":
+        email = request.form["email"]
+        senha = request.form["senha"]
+        usuario = Usuario.query.filter_by(email=email).first()
+        if usuario and check_password_hash(usuario.senha_hash,senha):
+            session["usuario_id"] = usuario.id
+            return redirect("/servicos")
+    return render_template("login.html")
+        
+
         
