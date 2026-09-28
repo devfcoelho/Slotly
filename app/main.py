@@ -19,6 +19,14 @@ def login_obrigatorio(funcao):
             return redirect("/login")
         return funcao(*args, **kwargs)
     return embrulho
+
+def barbeiro_obrigatorio(funcao):
+    @wraps(funcao)
+    def embrulho(*args, **kwargs):
+        if session.get("perfil") != "BARBEIRO":
+            return redirect("/login")
+        return funcao(*args, **kwargs)
+    return embrulho
 class Servico(db.Model):
     __tablename__ = "servico"
 
@@ -101,7 +109,7 @@ def listar_servicos():
     return render_template("servicos.html", servicos=servicos)
 
 @app.route("/servicos/novo", methods=["GET", "POST"])
-@login_obrigatorio
+@barbeiro_obrigatorio
 def novo_servico():
     if request.method == "POST":
         nome = request.form["nome"]
@@ -114,7 +122,7 @@ def novo_servico():
     return render_template("novo_servico.html")
 
 @app.route("/servicos/<int:id>/editar", methods=["GET", "POST"])
-@login_obrigatorio
+@barbeiro_obrigatorio
 def editar_servico(id):
     servico = Servico.query.get_or_404(id)
     if request.method == "POST":
@@ -126,12 +134,13 @@ def editar_servico(id):
     return render_template("editar_servico.html", servico=servico)
 
 @app.route("/servicos/<int:id>/desativar",methods=["POST"])
-@login_obrigatorio
+@barbeiro_obrigatorio
 def desativar_servico(id):
     servico = Servico.query.get_or_404(id)
     servico.ativo = not servico.ativo
     db.session.commit()
     return redirect("/servicos")
+
 
 @app.route("/cadastro", methods=["GET","POST"])
 def cadastro():
@@ -154,13 +163,16 @@ def login():
         usuario = Usuario.query.filter_by(email=email).first()
         if usuario and check_password_hash(usuario.senha_hash,senha):
             session["usuario_id"] = usuario.id
+            session["perfil"] = usuario.perfil
             return redirect("/servicos")
     return render_template("login.html")
 
 @app.route("/logout")
 def logout():
     session.pop("usuario_id",None)
+    session.pop("perfil",None)
     return redirect("/login")
+    
         
 
         
