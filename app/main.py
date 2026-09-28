@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 load_dotenv()
 app = Flask(__name__)
@@ -11,7 +12,13 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 db = SQLAlchemy(app)
-
+def login_obrigatorio(funcao):
+    @wraps(funcao)
+    def embrulho(*args, **kwargs):
+        if "usuario_id" not in session:
+            return redirect("/login")
+        return funcao(*args, **kwargs)
+    return embrulho
 class Servico(db.Model):
     __tablename__ = "servico"
 
@@ -93,19 +100,21 @@ def listar_servicos():
     servicos = Servico.query.all()
     return render_template("servicos.html", servicos=servicos)
 
-@app.route("/servicos/novo", methods = ["GET", "POST"])
+@app.route("/servicos/novo", methods=["GET", "POST"])
+@login_obrigatorio
 def novo_servico():
     if request.method == "POST":
         nome = request.form["nome"]
         duracao_min = request.form["duracao_min"]
-        preco = request.form ["preco"]
-        novo = Servico(nome=nome,duracao_min=duracao_min,preco=preco)
+        preco = request.form["preco"]
+        novo = Servico(nome=nome, duracao_min=duracao_min, preco=preco)
         db.session.add(novo)
         db.session.commit()
         return redirect("/servicos")
     return render_template("novo_servico.html")
 
 @app.route("/servicos/<int:id>/editar", methods=["GET", "POST"])
+@login_obrigatorio
 def editar_servico(id):
     servico = Servico.query.get_or_404(id)
     if request.method == "POST":
@@ -117,6 +126,7 @@ def editar_servico(id):
     return render_template("editar_servico.html", servico=servico)
 
 @app.route("/servicos/<int:id>/desativar",methods=["POST"])
+@login_obrigatorio
 def desativar_servico(id):
     servico = Servico.query.get_or_404(id)
     servico.ativo = not servico.ativo
@@ -146,6 +156,11 @@ def login():
             session["usuario_id"] = usuario.id
             return redirect("/servicos")
     return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("usuario_id",None)
+    return redirect("/login")
         
 
         
