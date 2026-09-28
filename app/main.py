@@ -81,9 +81,10 @@ class HorarioTrabalho(db.Model):
     hora_inicio = db.Column(db.String(5), nullable=False)
     hora_fim = db.Column(db.String(5), nullable=False)
     ativo = db.Column(db.Boolean, nullable=False, default=True)
+    
 
     __table_args__ = (
-        db.CheckConstraint("dia_semana IN (1, 2, 3, 4, 5, 6, 7)", name="ck_horario_trabalho_dia_semana"),
+        db.CheckConstraint("dia_semana IN (0, 1, 2, 3, 4, 5, 6)", name="ck_horario_trabalho_dia_semana"),
         db.CheckConstraint("hora_fim > hora_inicio", name="ck_horario_trabalho_hora"),
     )
 
