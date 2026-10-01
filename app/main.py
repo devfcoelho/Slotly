@@ -193,6 +193,22 @@ def novo_horario():
         return redirect("/horarios")
     return render_template("novo_horario.html")
 
+@app.route("/horarios/<int:id>/editar",methods=["GET","POST"])
+@barbeiro_obrigatorio
+def editar_horario(id):
+    horarios = HorarioTrabalho.query.get_or_404(id)
+    if request.method =="POST":
+        horarios.dia_semana = int(request.form["dia_semana"])
+        horarios.hora_inicio = request.form["hora_inicio"]
+        horarios.hora_fim = request.form["hora_fim"]
+        db.session.commit()
+        return redirect("/horarios")
+    return render_template("editar_horario.html",horario=horarios)
+   
+
+
+
+
 
     
         

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Horário</title>
+</head>
+<body>
+    <h1>Editar Horário</h1>
+    <form method="post">
+        <label>Dia da semana:</label>
+        <select name="dia_semana">
+            <option value="0" {% if horario.dia_semana == 0 %}selected{% endif %}>Segunda</option>
+            <option value="1" {% if horario.dia_semana == 1 %}selected{% endif %}>Terça</option>
+            <option value="2" {% if horario.dia_semana == 2 %}selected{% endif %}>Quarta</option>
+            <option value="3" {% if horario.dia_semana == 3 %}selected{% endif %}>Quinta</option>
+            <option value="4" {% if horario.dia_semana == 4 %}selected{% endif %}>Sexta</option>
+            <option value="5" {% if horario.dia_semana == 5 %}selected{% endif %}>Sábado</option>
+            <option value="6" {% if horario.dia_semana == 6 %}selected{% endif %}>Domingo</option>
+        </select>
+
+        <label>Hora de início:</label>
+        <input type="time" name="hora_inicio" value="{{ horario.hora_inicio }}">
+
+        <label>Hora de fim:</label>
+        <input type="time" name="hora_fim" value="{{ horario.hora_fim }}">
+
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+</html>
