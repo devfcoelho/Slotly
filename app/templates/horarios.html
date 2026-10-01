@@ -7,9 +7,10 @@
 </head>
 <body>
     <h1>Horários</h1>
+    {% set Dia_semana = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"] %}
     <ul>
         {% for horario in horarios %}
-            <li>Dia {{ horario.dia_semana }}: {{ horario.hora_inicio }} às {{ horario.hora_fim }}</li>
+            <li>Dia {{ Dia_semana[horario.dia_semana]}}: {{ horario.hora_inicio }} às {{ horario.hora_fim }}</li>
         {% endfor %}
     </ul>
 </body>
