@@ -109,19 +109,6 @@ def listar_servicos():
     servicos = Servico.query.all()
     return render_template("servicos.html", servicos=servicos)
 
-@app.route("/servicos/novo", methods=["GET", "POST"])
-@barbeiro_obrigatorio
-def novo_servico():
-    if request.method == "POST":
-        nome = request.form["nome"]
-        duracao_min = request.form["duracao_min"]
-        preco = request.form["preco"]
-        novo = Servico(nome=nome, duracao_min=duracao_min, preco=preco)
-        db.session.add(novo)
-        db.session.commit()
-        return redirect("/servicos")
-    return render_template("novo_servico.html")
-
 @app.route("/servicos/<int:id>/editar", methods=["GET", "POST"])
 @barbeiro_obrigatorio
 def editar_servico(id):
@@ -173,6 +160,40 @@ def logout():
     session.pop("usuario_id",None)
     session.pop("perfil",None)
     return redirect("/login")
+
+@app.route("/horarios")
+@barbeiro_obrigatorio
+def listar_horarios():
+    horarios = HorarioTrabalho.query.all()
+    return render_template("horarios.html", horarios=horarios)
+
+@app.route("/servicos/novo", methods=["GET", "POST"])
+@barbeiro_obrigatorio
+def novo_servico():
+    if request.method == "POST":
+        nome = request.form["nome"]
+        duracao_min = request.form["duracao_min"]
+        preco = request.form["preco"]
+        novo = Servico(nome=nome, duracao_min=duracao_min, preco=preco)
+        db.session.add(novo)
+        db.session.commit()
+        return redirect("/servicos")
+    return render_template("novo_servico.html")
+
+@app.route("/horarios/novo",methods=["GET","POST"])
+@barbeiro_obrigatorio
+def novo_horario():
+    if request.method == "POST":
+        dia_semana = int(request.form["dia_semana"])
+        hora_inicio = request.form["hora_inicio"]
+        hora_fim = request.form["hora_fim"]
+        novoH = HorarioTrabalho(dia_semana=dia_semana,hora_inicio=hora_inicio,hora_fim=hora_fim)
+        db.session.add(novoH)
+        db.session.commit()
+        return redirect("/horarios")
+    return render_template("novo_horario.html")
+
+
     
         
 
