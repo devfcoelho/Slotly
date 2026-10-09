@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloqueios</title>
+</head>
+<body>
+    <h1>Bloqueios</h1>
+    <ul>
+        {% for bloqueio in bloqueios %}
+            <li>
+                {{ bloqueio.data_hora_inicio }} até {{ bloqueio.data_hora_fim }}
+                {% if bloqueio.motivo %}
+                    - {{ bloqueio.motivo }}
+                {% endif %}
+                <a href="/bloqueios/{{ bloqueio.id }}/editar">Editar</a>
+                <form method="post" action="/bloqueios/{{ bloqueio.id }}/remover" style="display: inline;">
+                    <button type="submit">Remover</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

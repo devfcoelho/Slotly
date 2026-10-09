@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from datetime import datetime
 
 load_dotenv()
 app = Flask(__name__)
@@ -212,6 +213,51 @@ def desativar_horario(id):
     horario.ativo = not horario.ativo
     db.session.commit()
     return redirect("/horarios")
+
+@app.route("/bloqueios")
+@barbeiro_obrigatorio
+def listar_bloqueios():
+    bloqueios = Bloqueio.query.all()
+    return render_template("bloqueios.html", bloqueios=bloqueios)
+
+@app.route("/bloqueios/novo",methods=["GET","POST"])
+@barbeiro_obrigatorio
+def novo_bloqueio():
+    if request.method == "POST":
+        data_hora_inicio = datetime.fromisoformat(request.form["data_hora_inicio"])
+        data_hora_fim = datetime.fromisoformat(request.form["data_hora_fim"])
+        motivo = request.form["motivo"]
+
+        novo = Bloqueio(data_hora_inicio=data_hora_inicio, data_hora_fim=data_hora_fim, motivo=motivo)
+        db.session.add(novo)
+        db.session.commit()
+        return redirect("/bloqueios")
+    return render_template("novo_bloqueio.html")
+
+@app.route("/bloqueios/<int:id>/editar", methods=["GET", "POST"])
+@barbeiro_obrigatorio
+def editar_bloqueio(id):
+    bloqueio = Bloqueio.query.get_or_404(id)
+    if request.method == "POST":
+        bloqueio.data_hora_inicio = datetime.fromisoformat(request.form["data_hora_inicio"])
+        bloqueio.data_hora_fim = datetime.fromisoformat(request.form["data_hora_fim"])
+        bloqueio.motivo = request.form["motivo"]
+        db.session.commit()
+        return redirect("/bloqueios")
+    return render_template("editar_bloqueio.html", bloqueio=bloqueio)
+
+@app.route("/bloqueios/<int:id>/remover", methods=["POST"])
+@barbeiro_obrigatorio
+def remover_bloqueio(id):
+    bloqueio = Bloqueio.query.get_or_404(id)
+    db.session.delete(bloqueio)
+    db.session.commit()
+    return redirect("/bloqueios")
+        
+        
+    
+
+
 
    
 
