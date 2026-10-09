@@ -10,7 +10,18 @@
     {% set Dia_semana = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"] %}
     <ul>
         {% for horario in horarios %}
-            <li>Dia {{ Dia_semana[horario.dia_semana]}}: {{ horario.hora_inicio }} às {{ horario.hora_fim }}</li>
+            <li>
+                Dia {{ Dia_semana[horario.dia_semana] }}: {{ horario.hora_inicio }} às {{ horario.hora_fim }}
+                {% if horario.ativo %}
+                    (Ativo)
+                {% else %}
+                    (Inativo)
+                {% endif %}
+                <a href="/horarios/{{ horario.id_horario }}/editar">Editar</a>
+                <form method="post" action="/horarios/{{ horario.id_horario }}/desativar" style="display: inline;">
+                    <button type="submit">Ativar/Desativar</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
 </body>

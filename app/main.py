@@ -204,6 +204,15 @@ def editar_horario(id):
         db.session.commit()
         return redirect("/horarios")
     return render_template("editar_horario.html",horario=horarios)
+
+@app.route("/horarios/<int:id>/desativar", methods=["POST"])
+@barbeiro_obrigatorio
+def desativar_horario(id):
+    horario = HorarioTrabalho.query.get_or_404(id)
+    horario.ativo = not horario.ativo
+    db.session.commit()
+    return redirect("/horarios")
+
    
 
 
