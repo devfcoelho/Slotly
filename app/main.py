@@ -253,6 +253,8 @@ def remover_bloqueio(id):
     db.session.delete(bloqueio)
     db.session.commit()
     return redirect("/bloqueios")
+
+
         
         
     
