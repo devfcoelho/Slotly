@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from datetime import datetime
+from datetime import datetime, timedelta, time
 
 load_dotenv()
 app = Flask(__name__)
@@ -28,6 +28,35 @@ def barbeiro_obrigatorio(funcao):
             return redirect("/login")
         return funcao(*args, **kwargs)
     return embrulho
+
+def horarios_livres(dia):
+    dia_semana_numero = dia.weekday()
+    horario = HorarioTrabalho.query.filter_by(dia_semana=dia_semana_numero).first()
+    if horario is None:
+        return []
+    inicio = datetime.strptime(horario.hora_inicio, "%H:%M").time()
+    fim = datetime.strptime(horario.hora_fim, "%H:%M").time()
+    atual = datetime.combine(dia,inicio)
+    limite = datetime.combine(dia,fim)
+    horarios= []
+    while atual < limite:
+        horarios.append(atual) 
+        atual = atual + timedelta(minutes=30)
+    
+    inicio_dia = datetime.combine(dia, time(0, 0))
+    dia_seguinte = inicio_dia + timedelta(days=1)
+    agendamentos = Agendamento.query.filter(Agendamento.data_hora_inicio >= inicio_dia, Agendamento.data_hora_inicio < dia_seguinte).all()
+    
+    livres = []
+    for h in horarios:
+        fim_de_h = h + timedelta(minutes=30)
+        ocupado = False
+        for a in agendamentos:
+            if h < a.data_hora_fim and fim_de_h > a.data_hora_inicio:
+                ocupado = True
+        if not ocupado:
+            livres.append(h)
+    return livres
 class Servico(db.Model):
     __tablename__ = "servico"
 
