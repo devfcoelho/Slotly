@@ -46,7 +46,7 @@ def horarios_livres(dia):
     inicio_dia = datetime.combine(dia, time(0, 0))
     dia_seguinte = inicio_dia + timedelta(days=1)
     agendamentos = Agendamento.query.filter(Agendamento.data_hora_inicio >= inicio_dia, Agendamento.data_hora_inicio < dia_seguinte).all()
-    
+    bloqueios = Bloqueio.query.filter(Bloqueio.data_hora_inicio >= inicio_dia, Bloqueio.data_hora_inicio < dia_seguinte).all()
     livres = []
     for h in horarios:
         fim_de_h = h + timedelta(minutes=30)
@@ -54,9 +54,13 @@ def horarios_livres(dia):
         for a in agendamentos:
             if h < a.data_hora_fim and fim_de_h > a.data_hora_inicio:
                 ocupado = True
+        for b in bloqueios:
+            if h < b.data_hora_fim and fim_de_h > b.data_hora_inicio:
+                ocupado = True
         if not ocupado:
             livres.append(h)
     return livres
+
 class Servico(db.Model):
     __tablename__ = "servico"
 
