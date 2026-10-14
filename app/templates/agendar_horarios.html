@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horários Disponíveis - Slotly</title>
+</head>
+<body>
+    <h1>Horários disponíveis</h1>
+    <ul>
+        {% for horario in lista_horarios %}
+            <li>
+                <form method="post" action="/agendar/confirmar">
+                    <input type="hidden" name="servico_id" value="{{ servico_id }}">
+                    <input type="hidden" name="horario" value="{{ horario }}">
+                    <button type="submit">{{ horario.strftime('%H:%M') }}</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

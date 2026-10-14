@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, date
 
 load_dotenv()
 app = Flask(__name__)
@@ -286,6 +286,50 @@ def remover_bloqueio(id):
     db.session.delete(bloqueio)
     db.session.commit()
     return redirect("/bloqueios")
+
+@app.route("/agendar")
+@login_obrigatorio
+def agendar():
+    servico = Servico.query.filter_by(ativo=True).all()
+    return render_template("agendar.html",servicos=servico)
+
+@app.route("/agendar/horarios")
+@login_obrigatorio
+def ver_horarios():
+    servico_id = request.args.get('servico_id')
+    data_texto = request.args.get('data')
+    data_objeto = date.fromisoformat(data_texto)
+    lista_horarios = horarios_livres(data_objeto)
+    return render_template("agendar_horarios.html",servico_id=servico_id,lista_horarios=lista_horarios)
+
+@app.route("/agendar/confirmar", methods=["POST"])
+@login_obrigatorio
+def confirmar_agendamento():
+    servico_id = request.form.get("servico_id")
+    horario_texto = request.form.get("horario")
+    inicio = datetime.fromisoformat(horario_texto)
+    
+    servico = Servico.query.get_or_404(servico_id)
+    horario_fim = inicio + timedelta(minutes=servico.duracao_min)
+    
+    usuario_id = session["usuario_id"]
+    
+    novo_agendamento = Agendamento(
+        id_usuario=usuario_id,
+        id_servico=servico_id,
+        data_hora_inicio=inicio,
+        data_hora_fim=horario_fim,
+        status="CONFIRMADO"
+    )
+    db.session.add(novo_agendamento)
+    db.session.commit()
+    
+    return redirect("/agendar")
+
+
+
+    
+  
 
 
         
