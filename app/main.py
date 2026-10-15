@@ -335,24 +335,15 @@ def meus_agendamentos():
     agendamentos = Agendamento.query.filter_by(id_usuario=usuario_id).all()
     return render_template("meus_agendamentos.html",usuario_id=usuario_id,agendamentos=agendamentos)
 
-@app.route("/meus_agendamentos/<int:id>/cancelar",methods=["POST"])
+@app.route("/meus-agendamentos/<int:id>/cancelar", methods=["POST"])
 @login_obrigatorio
 def cancelar_agendamento(id):
     agendamento = Agendamento.query.get_or_404(id)
-    agendamento.status = "CANCELADO"
-    agendamento.data_cancelamento = datetime.now()
-    db.session.commit()
-    return redirect("/meus_agendamentos")
-
-
-
-
-
-
-
-
-
-    
+    if (agendamento.data_hora_inicio - datetime.now()) >= timedelta(hours=2):
+        agendamento.status = "CANCELADO"
+        agendamento.data_cancelamento = datetime.now()
+        db.session.commit()
+    return redirect("/meus-agendamentos")
   
 
 

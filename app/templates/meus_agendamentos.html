@@ -13,7 +13,7 @@
             Serviço: {{agendamento.servico.nome}}
             Data e hora: {{ agendamento.data_hora_inicio.strftime('%d/%m/%Y %H:%M') }}
             {% if agendamento.status == "CONFIRMADO" %}
-           <form method="post" action="/meus_agendamentos/{{agendamento.id_agendamento}}/cancelar">
+           <form method="post" action="/meus-agendamentos/{{agendamento.id_agendamento}}/cancelar">
                 <button type="submit">Cancelar</button>
             </form>
             {% else %}
