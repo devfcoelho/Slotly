@@ -95,7 +95,9 @@ class Agendamento(db.Model):
 
     id_agendamento = db.Column(db.Integer, primary_key=True)
     id_usuario = db.Column(db.Integer, db.ForeignKey("usuario.id"), nullable=False)
-    id_servico = db.Column(db.Integer, db.ForeignKey("servico.id"), nullable=False)
+    id_servico = db.Column(db.Integer,  db.ForeignKey("servico.id"), nullable=False)
+    servico = db.relationship("Servico")
+    usuario = db.relationship("Usuario")
     data_hora_inicio = db.Column(db.DateTime, nullable=False)
     data_hora_fim = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), nullable=False, default="CONFIRMADO")
@@ -325,6 +327,28 @@ def confirmar_agendamento():
     db.session.commit()
     
     return redirect("/agendar")
+
+@app.route("/meus-agendamentos")
+@login_obrigatorio
+def meus_agendamentos():
+    usuario_id = session["usuario_id"]
+    agendamentos = Agendamento.query.filter_by(id_usuario=usuario_id).all()
+    return render_template("meus_agendamentos.html",usuario_id=usuario_id,agendamentos=agendamentos)
+
+@app.route("/meus_agendamentos/<int:id>/cancelar",methods=["POST"])
+@login_obrigatorio
+def cancelar_agendamento(id):
+    agendamento = Agendamento.query.get_or_404(id)
+    agendamento.status = "CANCELADO"
+    agendamento.data_cancelamento = datetime.now()
+    db.session.commit()
+    return redirect("/meus_agendamentos")
+
+
+
+
+
+
 
 
 
