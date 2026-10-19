@@ -141,6 +141,7 @@ def inicio():
     return "Olá, Slotly"
 
 @app.route("/servicos")
+@barbeiro_obrigatorio
 def listar_servicos():
     servicos = Servico.query.all()
     return render_template("servicos.html", servicos=servicos)
@@ -188,7 +189,10 @@ def login():
         if usuario and check_password_hash(usuario.senha_hash,senha):
             session["usuario_id"] = usuario.id
             session["perfil"] = usuario.perfil
-            return redirect("/servicos")
+            if usuario.perfil =="BARBEIRO":
+                return redirect("/agenda")
+            else:
+                return redirect("/agendar")
     return render_template("login.html")
 
 @app.route("/logout")
@@ -344,7 +348,26 @@ def cancelar_agendamento(id):
         agendamento.data_cancelamento = datetime.now()
         db.session.commit()
     return redirect("/meus-agendamentos")
-  
+
+@app.route("/agenda")
+@barbeiro_obrigatorio
+def agenda():
+    agendamentos = Agendamento.query.filter_by(status="CONFIRMADO").order_by(Agendamento.data_hora_inicio).all()
+    return render_template("agenda.html", agendamentos=agendamentos)
+
+@app.route("/agenda/<int:id>/concluir", methods=["POST"])
+@barbeiro_obrigatorio
+def concluir_agendamento(id):
+    agendamento = Agendamento.query.get_or_404(id)
+    if  agendamento.status == "CONFIRMADO":
+        agendamento.status = "CONCLUIDO"
+        db.session.commit()
+    return redirect("/agenda")
+
+
+
+
+
 
 
         

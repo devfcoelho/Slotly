@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda</title>
+</head>
+<body>
+    <h1>Agenda</h1>
+    <ul>
+        {% for agendamento in agendamentos %}
+            <li>
+                Serviço: {{ agendamento.servico.nome }}
+                Data e hora: {{ agendamento.data_hora_inicio.strftime('%d/%m/%Y %H:%M') }}
+                Cliente: {{ agendamento.usuario.nome }}
+                <form method="post" action="/agenda/{{ agendamento.id_agendamento }}/concluir" style="display: inline;">
+                    <button type="submit">Concluir</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
