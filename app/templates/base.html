@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slotly</title>
+</head>
+<body>
+    <nav>
+        <strong>Slotly</strong> |
+        {% if not session.get("usuario_id") %}
+            <a href="/login">Login</a>
+            <a href="/cadastro">Cadastro</a>
+        {% elif session.get("perfil") == "BARBEIRO" %}
+            <a href="/agenda">Agenda</a>
+            <a href="/servicos">Serviços</a>
+            <a href="/horarios">Horários</a>
+            <a href="/bloqueios">Bloqueios</a>
+            <a href="/logout">Sair</a>
+        {% else %}
+            <a href="/agendar">Agendar</a>
+            <a href="/meus-agendamentos">Meus agendamentos</a>
+            <a href="/logout">Sair</a>
+        {% endif %}
+    </nav>
+    <hr>
+
+    {% block conteudo %}{% endblock %}
+</body>
+</html>

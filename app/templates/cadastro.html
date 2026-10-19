@@ -1,22 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - Slotly</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block conteudo %}
+
     <form method="post">
-    <label>Nome:</label>
-    <input type="text" name="nome">
+        <label>Nome:</label>
+        <input type="text" name="nome">
 
-    <label>Email:</label>
-    <input type="email" name="email">
+        <label>Email:</label>
+        <input type="email" name="email">
 
-    <label>Senha:</label>
-    <input type="password" name="senha">
+        <label>Senha:</label>
+        <input type="password" name="senha">
 
-    <button type="submit">Salvar</button>
-</form>
-</body>
-</html>
+        <button type="submit">Salvar</button>
+    </form>
+{% endblock %}

@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Horário</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block conteudo %}
     <h1>Editar Horário</h1>
     <form method="post">
         <label>Dia da semana:</label>
@@ -27,5 +22,4 @@
 
         <button type="submit">Salvar</button>
     </form>
-</body>
-</html>
+{% endblock %}

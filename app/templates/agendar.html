@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendamento - Slotly</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block conteudo %}
+
     <form method="get" action="/agendar/horarios">
         <select name="servico_id">
             {% for servico in servicos %}
@@ -18,5 +14,5 @@
         <button type="submit">Ver horários</button>
 
     </form>
-</body>
-</html>
+{% endblock %}
+

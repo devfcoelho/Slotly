@@ -1,22 +1,22 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Serviços - Slotly</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block conteudo %}
     <h1>Serviços</h1>
+    <a href="/servicos/novo">Novo serviço</a>
     <ul>
         {% for servico in servicos %}
-            <li>{{ servico.nome }} - {{ servico.duracao_min }} min - R$ {{ servico.preco }}{% if servico.ativo %}
-    (Ativo)
-{% else %}
-    (Inativo)
-{% endif %}
-                <a href="/servicos/{{servico.id}}/editar">Editar</a><form method="post" action="/servicos/{{ servico.id }}/desativar" style="display: inline;">
-    <button type="submit">Ativar/Desativar</button>
-</form></li>
+            <li>
+                {{ servico.nome }} - {{ servico.duracao_min }} min - R$ {{ servico.preco }}
+                {% if servico.ativo %}
+                    (Ativo)
+                {% else %}
+                    (Inativo)
+                {% endif %}
+                <a href="/servicos/{{ servico.id }}/editar">Editar</a>
+                <form method="post" action="/servicos/{{ servico.id }}/desativar" style="display: inline;">
+                    <button type="submit">Ativar/Desativar</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
-</body>
-</html>
+{% endblock %}
