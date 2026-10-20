@@ -1,68 +1,113 @@
 # Slotly
 
-Sistema de agendamento online para barbearia, feito para praticar desenvolvimento web com Python, banco de dados relacional e front end.
+Sistema de agendamento online para barbearia, desenvolvido com Python, Flask e PostgreSQL.
 
-> 🚧 **Status:** em desenvolvimento. CRUD de serviços completo. Próximo passo: cadastro e login de usuários.
+🔗 **Acesse online:** [slotly-vobt.onrender.com](https://slotly-vobt.onrender.com)
+
+> ⏳ O projeto está hospedado no plano gratuito do Render. Depois de alguns minutos sem acesso, o servidor "dorme", e o **primeiro acesso pode levar cerca de 1 minuto** para carregar.
+
+## Teste com os usuários de demonstração
+
+| Perfil | Email | Senha |
+|---|---|---|
+| Cliente | `cliente@slotly.com` | `demo123` |
+| Barbeiro | `barbeiro@slotly.com` | `demo123` |
+
+O barbeiro de demonstração atende de **segunda a sexta, das 09:00 às 18:00**, e **sábado, das 09:00 às 13:00**.
 
 ## Sobre o projeto
 
-O Slotly permite que clientes reservem horários com o barbeiro sem conflitos de agenda, e que o barbeiro controle seus dias de trabalho, folgas, serviços e atendimentos. O sistema foi pensado para **um barbeiro só**, com serviços de **durações diferentes** (corte, barba, sobrancelha...).
+O Slotly permite que clientes reservem horários com o barbeiro **sem conflitos de agenda**. O sistema calcula os horários livres de cada dia a partir do expediente do barbeiro, descontando os horários já agendados e os bloqueios (folgas, feriados, compromissos), e respeita a **duração de cada serviço**.
 
-## Funcionalidades do MVP
+Foi o meu primeiro projeto completo, construído do planejamento ao deploy: definição do MVP, modelagem do banco, back end, front end e publicação online.
+
+## Prints
+
+**Login**
+
+![Tela de login](docs/prints/login.jpg)
+
+**Agendamento (cliente)**
+
+![Escolha de serviço e data](docs/prints/agendar.jpg)
+
+**Horários**
+![Horários disponíveis](docs/prints/horarios.jpg)
+
+**Meus agendamentos (cliente)**
+
+![Meus agendamentos](docs/prints/meus-agendamentos.jpg)
+
+**Agenda (barbeiro)**
+
+![Agenda do barbeiro](docs/prints/agenda.jpg)
+
+## Funcionalidades
 
 **Cliente**
 - Criar conta e fazer login
-- Ver os horários livres e escolher o serviço
+- Escolher serviço e data, e ver apenas os horários realmente livres
 - Agendar com confirmação automática
-- Cancelar dentro do prazo mínimo e criar um novo agendamento
+- Ver os próprios agendamentos
+- Cancelar com no mínimo 2 horas de antecedência
 
 **Barbeiro**
-- Definir os dias e horários de trabalho
-- Bloquear folgas e horários indisponíveis
-- Ver a agenda da semana
-- Cadastrar, editar e desativar serviços
-- Marcar o atendimento como concluído
+- Cadastrar, editar e ativar/desativar serviços (nome, duração e preço)
+- Definir os dias e horários de trabalho da semana
+- Criar bloqueios pontuais (folgas, feriados, compromissos)
+- Ver a agenda com os atendimentos confirmados
+- Marcar atendimentos como concluídos
 
 **Regras do sistema**
-- Impede dois agendamentos no mesmo horário
+- Impede agendamentos sobrepostos, considerando a duração de cada serviço
+- Respeita expediente e bloqueios do barbeiro
 - Só permite agendar com login
-- Respeita a duração de cada serviço
-- Exige prazo mínimo para cancelamento
+- Senhas armazenadas com hash
+- Cada perfil acessa apenas as telas permitidas
+
+## Destaques técnicos
+
+- **Cálculo de horários livres:** gera os horários do expediente em intervalos de 30 minutos e descarta os que se sobrepõem a agendamentos ou bloqueios, usando a regra de sobreposição de intervalos (`início_novo < fim_existente` e `fim_novo > início_existente`).
+- **Autenticação:** senhas com hash (Werkzeug), sessão do Flask e decorators próprios (`login_obrigatorio` e `barbeiro_obrigatorio`) para proteger as rotas por perfil.
+- **Modelagem:** banco modelado primeiro no Oracle SQL Developer Data Modeler e implementado como modelos SQLAlchemy em PostgreSQL, com chaves estrangeiras, relacionamentos e check constraints.
+- **Templates:** herança de templates com Jinja (`base.html`), menu que muda conforme o perfil e mensagens de feedback com `flash`.
 
 ## Tecnologias
 
-- **Backend:** Python e Flask
-- **ORM:** SQLAlchemy (Flask-SQLAlchemy)
-- **Banco de dados:** PostgreSQL (modelagem inicial feita no Oracle SQL Developer Data Modeler, documentada em `docs/`)
-- **Front end:** HTML e Jinja (templates), CSS e JavaScript
+- **Back end:** Python, Flask, Flask-SQLAlchemy, Werkzeug
+- **Banco de dados:** PostgreSQL (Neon em produção)
+- **Front end:** HTML, Jinja e CSS
+- **Deploy:** Render e Gunicorn
 - **Versionamento:** Git e GitHub
+
+## Modelo de dados
+
+| Tabela | Descrição |
+|---|---|
+| `usuario` | Clientes e barbeiro (nome, email, senha com hash, perfil) |
+| `servico` | Serviços oferecidos (nome, duração, preço, ativo) |
+| `agendamento` | Liga cliente e serviço, com início, fim e status (confirmado, cancelado, concluído) |
+| `horario_trabalho` | Expediente semanal do barbeiro (dia da semana, início e fim) |
+| `bloqueio` | Períodos indisponíveis pontuais (folgas, feriados) |
 
 ## Estrutura do projeto
 
 ```
 Slotly/
 ├── app/
-│   ├── templates/         # páginas HTML (Jinja)
-│   │   ├── servicos.html
-│   │   ├── novo_servico.html
-│   │   └── editar_servico.html
-│   ├── static/            # CSS, JavaScript e imagens
-│   └── main.py            # aplicação Flask, modelos e rotas
-├── docs/                  # documentação (MVP e script do banco em Oracle)
-├── requirements.txt       # dependências do projeto
-├── .env.example           # modelo de variáveis de ambiente
+│   ├── main.py            # aplicação Flask: modelos, regras e rotas
+│   ├── static/
+│   │   └── style.css      # estilo do sistema
+│   └── templates/         # páginas HTML (Jinja), todas herdando de base.html
+├── docs/
+│   ├── Slotly.txt         # definição do MVP e user stories
+│   ├── slotly_ddl.sql     # modelagem original do banco (Oracle)
+│   └── prints/            # capturas de tela
+├── seed.py                # cria os dados de demonstração
+├── requirements.txt       # dependências
+├── .env.example           # modelo das variáveis de ambiente
 └── README.md
 ```
-
-## Modelo de dados
-
-O banco tem 5 tabelas, modeladas primeiro em Oracle (documentação em `docs/slotly_ddl.sql`) e implementadas como modelos SQLAlchemy em PostgreSQL:
-
-- **Servico** — serviços oferecidos (nome, duração, preço, ativo)
-- **Usuario** — clientes e barbeiro (nome, email, senha com hash, perfil)
-- **Agendamento** — o centro do sistema, liga usuário e serviço, com status e datas
-- **HorarioTrabalho** — regra semanal de expediente do barbeiro
-- **Bloqueio** — exceções pontuais (folgas, feriados)
 
 ## Como rodar localmente
 
@@ -73,64 +118,50 @@ Pré-requisitos: Python 3, Git e PostgreSQL instalados.
 git clone https://github.com/devfcoelho/Slotly.git
 cd Slotly
 
-# 2. Criar o ambiente virtual
+# 2. Criar e ativar o ambiente virtual
 python -m venv venv
-
-# 3. Ativar o ambiente virtual
 source venv/Scripts/activate   # Windows (Git Bash)
 # source venv/bin/activate     # Linux ou macOS
 
-# 4. Instalar as dependências
+# 3. Instalar as dependências
 pip install -r requirements.txt
 
-# 5. Criar um banco PostgreSQL chamado "slotly"
+# 4. Criar um banco PostgreSQL chamado "slotly"
 
-# 6. Copiar o .env.example para .env e preencher com seus dados
+# 5. Configurar as variáveis de ambiente
 cp .env.example .env
+# edite o .env com sua DATABASE_URL e uma SECRET_KEY
 
-# 7. Criar as tabelas no banco
+# 6. Criar as tabelas e os dados de demonstração
 python -c "from app.main import app, db; app.app_context().push(); db.create_all()"
+python seed.py
 
-# 8. Iniciar o servidor
+# 7. Iniciar o servidor
 flask --app app.main run --debug
 ```
 
-Depois, abra `http://127.0.0.1:5000` no navegador.
-
-## Rotas disponíveis (até o momento)
-
-| Rota | Método | Descrição |
-|---|---|---|
-| `/` | GET | Página inicial |
-| `/servicos` | GET | Lista todos os serviços cadastrados |
-| `/servicos/novo` | GET, POST | Formulário para cadastrar um serviço |
-| `/servicos/<id>/editar` | GET, POST | Formulário para editar um serviço |
-| `/servicos/<id>/desativar` | POST | Ativa ou desativa um serviço |
-
-## Documentação
-
-- [`docs/Slotly.txt`](docs/Slotly.txt): definição do MVP, user stories e regras
-- [`docs/slotly_ddl.sql`](docs/slotly_ddl.sql): modelagem original do banco em Oracle
+Depois, abra `http://127.0.0.1:5000`.
 
 ## Roadmap
 
 - [x] Planejamento e definição do MVP
 - [x] Modelagem do banco de dados (Oracle)
-- [x] Configuração do projeto e primeira rota
-- [x] Conexão com PostgreSQL e criação dos 5 modelos (SQLAlchemy)
-- [x] CRUD de serviços (criar, listar, editar, ativar/desativar)
-- [ ] Cadastro, login e autenticação (hash de senha, sessão)
-- [ ] Lógica de agendamento e regra de conflito de horário
-- [ ] Configuração de horários de trabalho e bloqueios (barbeiro)
-- [ ] Tela de agendamento para o cliente
-- [ ] Front end com CSS e melhoria visual
-- [ ] Validações e testes
-- [ ] Deploy
+- [x] Configuração do projeto, PostgreSQL e modelos SQLAlchemy
+- [x] CRUD de serviços, horários de trabalho e bloqueios
+- [x] Cadastro, login, logout e controle de acesso por perfil
+- [x] Cálculo de horários livres e regra de conflito
+- [x] Agendamento, cancelamento com prazo mínimo e agenda do barbeiro
+- [x] Mensagens de feedback, navegação e CSS
+- [x] Deploy
 
-### Fora do MVP (versões futuras)
+### Próximas melhorias
 
-Pagamento online, avaliação do atendimento, relatório de faturamento, pacotes mensais, lista de espera, lembretes e notificações por WhatsApp.
+- Ajustar fuso horário para o horário de Brasília no servidor
+- Lembretes e notificações (e-mail ou WhatsApp)
+- Avaliação do atendimento
+- Relatório de faturamento do barbeiro
+- Testes automatizados com pytest
 
 ## Autor
 
-Desenvolvido por [devfcoelho](https://github.com/devfcoelho).
+Desenvolvido por **Felipe Coelho** · [GitHub](https://github.com/devfcoelho)
