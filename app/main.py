@@ -138,7 +138,11 @@ class Bloqueio(db.Model):
 
 @app.route("/")
 def inicio():
-    return "Olá, Slotly"
+    if not session.get("usuario_id"):
+        return redirect("/login")
+    if session.get("perfil") == "BARBEIRO":
+        return redirect("/agenda")
+    return redirect("/agendar")
 
 @app.route("/servicos")
 @barbeiro_obrigatorio
