@@ -24,7 +24,10 @@
         {% endif %}
     </nav>
     <hr>
-
+        {% set mensagens = get_flashed_messages() %}
+        {% for mensagem in mensagens %}
+            <p>{{ mensagem }}</p>
+        {% endfor %}
     {% block conteudo %}{% endblock %}
 </body>
 </html>

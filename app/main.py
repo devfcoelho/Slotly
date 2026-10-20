@@ -2,7 +2,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime, timedelta, time, date
@@ -177,6 +177,7 @@ def cadastro():
         novo = Usuario(nome=nome,email=email,senha_hash=senha_hash)
         db.session.add(novo)
         db.session.commit()
+        flash("Cadastro concluído")
         return redirect("/login")
     return render_template("cadastro.html")
 
@@ -193,6 +194,7 @@ def login():
                 return redirect("/agenda")
             else:
                 return redirect("/agendar")
+        flash("Email ou senha inválidos.")
     return render_template("login.html")
 
 @app.route("/logout")
@@ -242,6 +244,7 @@ def editar_horario(id):
         horarios.hora_inicio = request.form["hora_inicio"]
         horarios.hora_fim = request.form["hora_fim"]
         db.session.commit()
+        flash("Horário salvo!")
         return redirect("/horarios")
     return render_template("editar_horario.html",horario=horarios)
 
@@ -329,6 +332,7 @@ def confirmar_agendamento():
     )
     db.session.add(novo_agendamento)
     db.session.commit()
+    flash("Agendamento confirmado!")
     
     return redirect("/agendar")
 
@@ -347,6 +351,9 @@ def cancelar_agendamento(id):
         agendamento.status = "CANCELADO"
         agendamento.data_cancelamento = datetime.now()
         db.session.commit()
+        flash("Agendamento cancelado")
+    else:
+        flash("Cancelamento só é permitido com pelo menos 2 horas de antecedência.")
     return redirect("/meus-agendamentos")
 
 @app.route("/agenda")
@@ -362,6 +369,7 @@ def concluir_agendamento(id):
     if  agendamento.status == "CONFIRMADO":
         agendamento.status = "CONCLUIDO"
         db.session.commit()
+        flash("Atendimento concluído")
     return redirect("/agenda")
 
 
