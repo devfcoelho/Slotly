@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     <title>Slotly</title>
 </head>
 <body>
     <nav>
-        <strong>Slotly</strong> |
+        <span class="logo">Slotly</span>
         {% if not session.get("usuario_id") %}
             <a href="/login">Login</a>
             <a href="/cadastro">Cadastro</a>
@@ -26,7 +29,7 @@
     <hr>
         {% set mensagens = get_flashed_messages() %}
         {% for mensagem in mensagens %}
-            <p>{{ mensagem }}</p>
+            <p class="mensagem">{{ mensagem }}</p>
         {% endfor %}
     {% block conteudo %}{% endblock %}
 </body>

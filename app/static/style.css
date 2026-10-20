@@ -1,0 +1,234 @@
+:root {
+    --fundo: #0a0e14;
+    --cartao: #121821;
+    --cartao-hover: #18202b;
+    --borda: #232c38;
+    --texto: #e6edf3;
+    --texto-suave: #8b98a8;
+    --azul: #3b82f6;
+    --azul-claro: #60a5fa;
+    --azul-escuro: #1d4ed8;
+    --sombra: 0 8px 24px rgba(0, 0, 0, 0.35);
+    --raio: 12px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", Arial, sans-serif;
+    background:
+        radial-gradient(circle at top, rgba(59, 130, 246, 0.12), transparent 60%),
+        var(--fundo);
+    background-attachment: fixed;
+    color: var(--texto);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Menu fixo no topo */
+nav {
+    position: sticky;
+    top: 16px;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    background: rgba(18, 24, 33, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    padding: 10px 16px;
+    box-shadow: var(--sombra);
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-right: auto;
+    background: linear-gradient(90deg, var(--azul-claro), var(--azul));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+nav a {
+    color: var(--texto-suave);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+}
+
+nav a:hover {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--azul-claro);
+}
+
+hr {
+    display: none;
+}
+
+/* Títulos e links */
+h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 32px 0 20px;
+}
+
+h1::after {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 4px;
+    margin-top: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--azul-claro), var(--azul));
+}
+
+a {
+    color: var(--azul-claro);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    color: var(--texto);
+}
+
+/* Formulários em cartão */
+form:not([style]) {
+    background: var(--cartao);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    padding: 24px;
+    box-shadow: var(--sombra);
+    max-width: 460px;
+}
+
+form label {
+    display: block;
+    margin: 14px 0 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--texto-suave);
+}
+
+form label:first-child {
+    margin-top: 0;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    background: var(--fundo);
+    color: var(--texto);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+    color-scheme: dark;
+}
+
+/* Botões */
+button {
+    margin-top: 18px;
+    padding: 10px 18px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+    background: linear-gradient(135deg, var(--azul), var(--azul-escuro));
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+}
+
+/* Listas como cartões */
+ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+}
+
+li {
+    background: var(--cartao);
+    border: 1px solid var(--borda);
+    border-left: 4px solid var(--azul);
+    border-radius: var(--raio);
+    padding: 16px 18px;
+    box-shadow: var(--sombra);
+    transition: transform 0.2s, background 0.2s;
+}
+
+li:hover {
+    transform: translateY(-2px);
+    background: var(--cartao-hover);
+}
+
+li a,
+li form {
+    margin-left: 10px;
+}
+
+li button {
+    margin-top: 0;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* Mensagens do flash */
+.mensagem {
+    margin: 20px 0 0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--azul);
+    background: rgba(59, 130, 246, 0.12);
+    color: var(--azul-claro);
+    font-weight: 500;
+    animation: aparecer 0.3s ease;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Celular */
+@media (max-width: 600px) {
+    nav {
+        top: 8px;
+    }
+
+    .logo {
+        width: 100%;
+    }
+}
